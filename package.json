@@ -1,0 +1,32 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "A simple Streamlit app that shows how to build a chatbot using OpenAI's GPT-3.5.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shark-cmd/rag.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shark-cmd/rag/issues"
+  },
+  "homepage": "https://github.com/shark-cmd/rag#readme",
+  "type": "module",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@qdrant/js-client-rest": "^1.15.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "node-webvtt": "^1.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
