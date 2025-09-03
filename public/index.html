@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timestamp-Aware RAG Demo</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 24px; }
+      .citation-link { color: #0b5fff; text-decoration: underline; }
+      #answer-container { margin-top: 12px; line-height: 1.5; }
+      pre { background: #f7f7f8; padding: 12px; overflow: auto; }
+      .row { display: flex; gap: 12px; align-items: center; }
+      input, button { font-size: 16px; padding: 8px; }
+      input { width: 340px; }
+    </style>
+  </head>
+  <body>
+    <h2>Timestamp-Aware RAG for VTT</h2>
+    <div class="row">
+      <input id="query" placeholder="Ask about the video..." />
+      <input id="videoId" placeholder="Optional video_id filter" />
+      <button id="go">Ask</button>
+    </div>
+    <div id="answer-container"></div>
+
+    <script>
+      function renderAnswer(apiResponse) {
+        let html = apiResponse.answer || '';
+        const citationRegex = /\[(\d{2}:\d{2})\]/g;
+        html = html.replace(citationRegex, (match, timestampStr) => {
+          const [minutes, seconds] = timestampStr.split(':').map(Number);
+          const timeInSeconds = minutes * 60 + seconds;
+          const source = (apiResponse.sources || []).find(
+            (s) => Math.abs(Math.floor(s.start_sec) - timeInSeconds) <= 1
+          );
+          const videoUrl = source ? `${source.video_url || '#'}#t=${timeInSeconds}s` : '#';
+          return `<a href="${videoUrl}" target="_blank" class="citation-link">${match}</a>`;
+        });
+        document.getElementById('answer-container').innerHTML = html;
+      }
+
+      document.getElementById('go').addEventListener('click', async () => {
+        const query = document.getElementById('query').value.trim();
+        const videoId = document.getElementById('videoId').value.trim() || undefined;
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, videoId })
+        });
+        const data = await res.json();
+        renderAnswer(data);
+      });
+    </script>
+  </body>
+  </html>
+

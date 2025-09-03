@@ -2,9 +2,11 @@
   "name": "workspace",
   "version": "1.0.0",
   "description": "A simple Streamlit app that shows how to build a chatbot using OpenAI's GPT-3.5.",
-  "main": "index.js",
+  "main": "src/server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --watch src --ext js,html --exec \"node src/server/index.js\"",
+    "start": "node src/server/index.js",
+    "ingest": "node scripts/ingest.js"
   },
   "repository": {
     "type": "git",
